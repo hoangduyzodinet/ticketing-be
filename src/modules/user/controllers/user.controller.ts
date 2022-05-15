@@ -6,8 +6,8 @@ import {
   HttpException,
   HttpStatus,
   Param,
-  Patch,
   Post,
+  Put,
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
@@ -56,7 +56,7 @@ export class UserController {
     return this.userService.signup(userCredential);
   }
 
-  @Patch('/:id')
+  @Put('/:id')
   @Roles(Role.Admin)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @ApiBearerAuth()
@@ -71,7 +71,7 @@ export class UserController {
     }
   }
 
-  @Patch('')
+  @Put('')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   async updateUser(

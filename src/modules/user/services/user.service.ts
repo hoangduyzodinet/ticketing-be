@@ -77,48 +77,52 @@ export class UserService {
   }
 
   async signup(userCredential: UserCredentialsDto): Promise<any> {
-    const { id: uidFacebook, email, name, gender, password } = userCredential;
-    const isInvalidUser = await this.getUserByEmail(email);
-    if (isInvalidUser && isInvalidUser.isSocial) return isInvalidUser;
+    try {
+      const { id: uidFacebook, email, name, gender, password } = userCredential;
+      const isInvalidUser = await this.getUserByEmail(email);
+      if (isInvalidUser && isInvalidUser.isSocial) return isInvalidUser;
 
-    if (isInvalidUser && !isInvalidUser.isSocial)
-      throw new ConflictException('Email already exists');
+      if (isInvalidUser && !isInvalidUser.isSocial)
+        throw new ConflictException('Email already exists');
 
-    const role = await this.roleService.findRole('user');
+      const role = await this.roleService.getRoleByName('user');
 
-    const newUser = this.userRepository.create({
-      email: email,
-      username: password ? email : uidFacebook,
-      name: name,
-      isSocial: password ? false : true,
-      roleId: role.id,
-      gender: gender,
-    });
-
-    if (password) {
-      newUser.password = bcrypt.hashSync(password, 10);
-    } else {
-      newUser.password = null;
-    }
-
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const result = await this.userRepository.save(newUser);
-
-    if (result) {
-      const wallet = await this.tatumService.generateFlowWallet();
-      await this.walletService.create({
-        userId: result.id,
-        walletAddress: wallet.xpub,
-        mnemonic: wallet.mnemonic,
+      const newUser = this.userRepository.create({
+        email: email,
+        username: password ? email : uidFacebook,
+        name: name,
+        isSocial: password ? false : true,
+        roleId: role.id,
+        gender: gender,
       });
 
-      const dto: UserDto = {
-        email: result.email,
-        name: result.name,
-        role: role.name,
-        isSocial: result.isSocial,
-      };
-      return dto;
+      if (password) {
+        newUser.password = bcrypt.hashSync(password, 10);
+      } else {
+        newUser.password = null;
+      }
+
+      const result = await this.userRepository.save(newUser);
+
+      if (result) {
+        const wallet = await this.tatumService.generateFlowWallet();
+        await this.walletService.create({
+          userId: result.id,
+          walletAddress: wallet.xpub,
+          mnemonic: wallet.mnemonic,
+        });
+
+        const dto: UserDto = {
+          email: result.email,
+          name: result.name,
+          role: role.name,
+          isSocial: result.isSocial,
+        };
+        return dto;
+      }
+    } catch (error) {
+      console.error(error);
+      return null;
     }
   }
 

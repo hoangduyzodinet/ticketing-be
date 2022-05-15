@@ -1,4 +1,3 @@
-import { RolePermissionEntity } from './rolePermission.entity';
 import { UserEntity } from './../../../user/domain/entities/user.entity';
 import {
   BaseEntity,
@@ -22,9 +21,9 @@ export class RoleEntity extends BaseEntity {
   @OneToMany(() => UserEntity, (user) => user.role)
   users: UserEntity[];
 
-  @OneToMany(
-    () => RolePermissionEntity,
-    (rolePermission) => rolePermission.role,
-  )
-  roles: RolePermissionEntity[];
+  // @OneToMany(
+  //   () => RolePermissionEntity,
+  //   (rolePermission) => rolePermission.role,
+  // )
+  // roles: RolePermissionEntity[];
 }

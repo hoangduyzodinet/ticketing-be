@@ -37,6 +37,11 @@ import { ShareModule } from './modules/share/share.module';
         entities: [join(__dirname, '**', '*.entity.{ts,js}')],
         synchronize: configService.get('database.sync'),
         ssl: configService.get('database.ssl'),
+        extra: {
+          ssl: {
+            rejectUnauthorized: false,
+          },
+        },
       }),
     }),
     AutomapperModule.forRoot({

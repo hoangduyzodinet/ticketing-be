@@ -7,8 +7,8 @@ import {
   HttpStatus,
   NotFoundException,
   Param,
-  Patch,
   Post,
+  Put,
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
@@ -40,7 +40,7 @@ export class PaymentController {
     }
   }
 
-  @Patch('/bank/:userId')
+  @Put('/bank/:userId')
   @UseGuards(JwtAuthGuard)
   async updateBank(
     @Param('userId') userId: string,
@@ -80,7 +80,7 @@ export class PaymentController {
     }
   }
 
-  @Patch('/wallet/:userId')
+  @Put('/wallet/:userId')
   async updateWallet(
     @Param('userId') userId: string,
     @Body() walletUpdateDto: WalletUpdateDto,

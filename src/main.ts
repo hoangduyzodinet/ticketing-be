@@ -1,20 +1,22 @@
-import { AllExceptionsFilter } from './exceptions/exception-filter';
+// import { AllExceptionsFilter } from './exceptions/exception-filter';
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import * as fs from 'fs';
-import * as path from 'path';
+// import * as fs from 'fs';
+// import * as path from 'path';
 
 async function bootstrap() {
-  const httpsOptions = {
-    key: fs.readFileSync(path.join(__dirname, './secrets/key.pem')),
-    cert: fs.readFileSync(path.join(__dirname, './secrets/cert.pem')),
-  };
-  const app = await NestFactory.create(AppModule, {
-    httpsOptions,
-  });
+  // const httpsOptions = {
+  //   key: fs.readFileSync(path.join(__dirname, './secrets/key.pem')),
+  //   cert: fs.readFileSync(path.join(__dirname, './secrets/cert.pem')),
+  // };
+  // const app = await NestFactory.create(AppModule, {
+  //   httpsOptions,
+  // });
+
+  const app = await NestFactory.create(AppModule);
 
   app.useGlobalPipes(new ValidationPipe());
   app.setGlobalPrefix('api');

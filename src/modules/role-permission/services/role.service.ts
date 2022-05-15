@@ -1,5 +1,5 @@
 import { RoleEntity } from '../domain/entities/role.entity';
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -10,7 +10,15 @@ export class RoleService {
     private rolesRepository: Repository<RoleEntity>,
   ) {}
 
-  async findRole(name: string): Promise<RoleEntity> {
+  async getAll(): Promise<RoleEntity[]> {
+    try {
+      return await this.rolesRepository.find();
+    } catch (error) {
+      throw new HttpException(error?.message, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  async getRoleByName(name: string): Promise<RoleEntity> {
     const role = await this.rolesRepository.findOne({ name });
     return role;
   }
